@@ -1,75 +1,144 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, TextInput, Alert, TouchableOpacity, Platform } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
-export default function HomeScreen() {
+export default function AuthScreen() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const tintColor = useThemeColor({}, 'tint');
+  const iconColor = useThemeColor({}, 'icon');
+
+  const primaryColor = '#4A90E2'; // Blue
+  const secondaryColor = '#50C878'; // Green
+  const accentColor = '#FF6B6B'; // Coral
+
+  const handleLogin = () => {
+    // TODO: Implement login logic
+    Alert.alert('Login', `Email: ${email}, Password: ${password}`);
+  };
+
+  const handleSignUp = () => {
+    // TODO: Implement sign up logic
+    Alert.alert('Sign Up', `Email: ${email}, Password: ${password}`);
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <ThemedView style={styles.container}>
+      <ThemedText type="title" style={[styles.title, { color: primaryColor }]}>
+        UniAuth
+      </ThemedText>
+      <ThemedView style={styles.form}>
+        <TextInput
+          style={[
+            styles.input,
+            {
+              color: textColor,
+              backgroundColor,
+              borderColor: primaryColor,
+              shadowColor: primaryColor,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              elevation: 3,
+            },
+          ]}
+          placeholder="Email"
+          placeholderTextColor={iconColor}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
+        <TextInput
+          style={[
+            styles.input,
+            {
+              color: textColor,
+              backgroundColor,
+              borderColor: secondaryColor,
+              shadowColor: secondaryColor,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              elevation: 3,
+            },
+          ]}
+          placeholder="Password"
+          placeholderTextColor={iconColor}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <ThemedView style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: primaryColor }]}
+            onPress={handleLogin}
+          >
+            <ThemedText style={styles.buttonText}>Login</ThemedText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: secondaryColor }]}
+            onPress={handleSignUp}
+          >
+            <ThemedText style={styles.buttonText}>Sign Up</ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  title: {
+    textAlign: 'center',
+    marginBottom: 40,
+    fontWeight: 'bold',
+  },
+  form: {
+    gap: 20,
+  },
+  input: {
+    borderWidth: 2,
+    padding: 12,
+    borderRadius: 8,
+  },
+  buttonContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  button: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
     alignItems: 'center',
-    gap: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
