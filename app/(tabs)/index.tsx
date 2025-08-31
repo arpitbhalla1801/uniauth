@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Alert, TouchableOpacity, Platform } from 'react-native';
+import { router } from 'expo-router';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -19,13 +20,19 @@ export default function AuthScreen() {
   const accentColor = '#FF6B6B'; // Coral
 
   const handleLogin = () => {
-    // TODO: Implement login logic
-    Alert.alert('Login', `Email: ${email}, Password: ${password}`);
+    // Hardcoded credentials for now
+    const validEmail = 'user@uniauth.com';
+    const validPassword = 'password123';
+
+    if (email === validEmail && password === validPassword) {
+      router.push('/authenticator' as any);
+    } else {
+      Alert.alert('Login Failed', 'Invalid email or password');
+    }
   };
 
   const handleSignUp = () => {
-    // TODO: Implement sign up logic
-    Alert.alert('Sign Up', `Email: ${email}, Password: ${password}`);
+    Alert.alert('Sign Up', 'Sign up functionality coming soon!');
   };
 
   return (
@@ -34,6 +41,9 @@ export default function AuthScreen() {
         UniAuth
       </ThemedText>
       <ThemedView style={styles.form}>
+        <ThemedText style={[styles.demoText, { color: iconColor }]}>
+          Demo credentials: user@uniauth.com / password123
+        </ThemedText>
         <TextInput
           style={[
             styles.input,
@@ -107,6 +117,11 @@ const styles = StyleSheet.create({
   },
   form: {
     gap: 20,
+  },
+  demoText: {
+    textAlign: 'center',
+    fontSize: 12,
+    fontStyle: 'italic',
   },
   input: {
     borderWidth: 2,
